@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "512818372133",
+    "project_id": "imagineai-8def0",
+    "storage_bucket": "imagineai-8def0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512818372133:android:44d60e7970a9343dfc69cc",
+        "android_client_info": {
+          "package_name": "com.example.imagineai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4agumen0moiirzAywymu3LDkpRzyu4I8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">1191407948684131</string>
+    <string name="fb_login_protocol_scheme">fb1191407948684131</string>
+    <string name="facebook_client_token">76c4b0a42f5cf47e2e38fe193171973e</string>
+    <string name="app_name">"ImagineAi"</string>
+
+</resources>
