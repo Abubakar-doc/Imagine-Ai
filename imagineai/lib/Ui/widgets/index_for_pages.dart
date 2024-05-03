@@ -1,35 +1,49 @@
 import 'package:flutter/material.dart';
 
-class indexForPages extends StatelessWidget {
-  final int currentPage;
-  final Function(int) onPageSelected;
+import '../themeStyle.dart';
 
+class indexForPages extends StatelessWidget {
   const indexForPages({
-    Key? key,
+    super.key,
+    required PageController pageController,
+    required this.millisecond,
     required this.currentPage,
-    required this.onPageSelected,
-  }) : super(key: key);
+  }) : _pageController = pageController;
+
+  final PageController _pageController;
+  final int millisecond;
+  final int currentPage;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (int i = 0; i < 3; i++)
-          GestureDetector(
+    return SizedBox(
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          3,
+              (index) => GestureDetector(
             onTap: () {
-              onPageSelected(i);
+              _pageController.animateToPage(
+                index,
+                duration: Duration(milliseconds: millisecond),
+                curve: Curves.easeInOut,
+              );
             },
-            child: SizedBox(
-              width: 30, // Adjust width as needed
-              child: Icon(
-                Icons.circle,
-                size: 20,
-                color: i == currentPage ? const Color(0xFF5C3DF6) : Colors.grey,
+            child: Container(
+              width: 10,
+              height: 10,
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: currentPage == index
+                    ? customPurple
+                    : Colors.grey,
               ),
             ),
           ),
-      ],
+        ),
+      ),
     );
   }
 }

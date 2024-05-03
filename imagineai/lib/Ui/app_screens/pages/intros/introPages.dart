@@ -4,20 +4,14 @@ import '../../../widgets/index_for_pages.dart';
 import 'package:imagineai/Ui/themeStyle.dart';
 
 class IntroPage extends StatelessWidget {
-  final VoidCallback onNextPressed;
   final int currentPage;
-  final PageController pageController;
-  final int millesecond;
   final String imagePath;
   final String headingText;
   final String subheadingText;
 
   const IntroPage({
     Key? key,
-    required this.onNextPressed,
     required this.currentPage,
-    required this.pageController,
-    required this.millesecond,
     required this.imagePath,
     required this.headingText,
     required this.subheadingText,
@@ -66,68 +60,6 @@ class IntroPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          indexForPages(
-            currentPage: currentPage,
-            onPageSelected: (int index) {
-              pageController.animateToPage(
-                index,
-                duration: Duration(
-                    milliseconds: millesecond), // Use the passed value here
-                curve: Curves.easeInOut,
-              );
-            },
-          ),
-          const SizedBox(height: 10),
-          Divider(
-            color: Colors.grey.shade300,
-            thickness: 2,
-            indent: 35,
-            endIndent: 35,
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (currentPage != 2) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const signinParentScreen(),
-                        ),
-                      );
-                    }
-                  },
-                  child: Text(
-                    'Skip',
-                    style: TextStyle(
-                      color: currentPage == 2 ? Colors.grey : customPurple,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: onNextPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: customPurple,
-                  ),
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );

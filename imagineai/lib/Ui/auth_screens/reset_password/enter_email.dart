@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:imagineai/utils/utils.dart';
 import '../../themeStyle.dart';
+import '../../widgets/loadingContainer.dart';
 
 class emailTo_reset_password extends StatefulWidget {
   const emailTo_reset_password({Key? key}) : super(key: key);
@@ -39,84 +41,109 @@ class _emailTo_reset_passwordState extends State<emailTo_reset_password> {
           ],
         ),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        alignment: Alignment.bottomCenter,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Please enter your email and we will send an OTP code in the next step to reset your password',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 17),
-              ),
-              const SizedBox(height: 30),
-              Expanded(
-                child: Column(
-                  children: [
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                    Colors.grey), // Customize the color as needed
+      body: Stack(
+        children: [
+          Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    "Kindly provide your email address, and we'll send you a reset link to your email address to reset password.",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  const SizedBox(height: 30),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: emailController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Email',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:
+                                        Colors.grey), // Customize the color as needed
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: customPurple), // Customize the color as needed
+                                  ),
+                                  suffixIcon: Icon(Icons.alternate_email),
+                                ),
+                                validator: (value) {
+                                  if (value?.isEmpty ?? true) {
+                                    return 'Enter Email';
+                                  }
+                                  return null;
+                                },
                               ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: customPurple), // Customize the color as needed
-                              ),
-                              suffixIcon: Icon(Icons.alternate_email),
-                            ),
-                            validator: (value) {
-                              if (value?.isEmpty ?? true) {
-                                return 'Enter Email';
-                              }
-                              return null;
-                            },
+                            ],
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        loading = true;
+                      });
+                      auth.sendPasswordResetEmail(email: emailController.text.toString())
+                          .then((value) {
+                        Utils().greytoastmsg("Password reset email sent successfully, check inbox or spam!", context);
+                        setState(() {
+                          loading = false;
+                        });
+                      })
+                          .catchError((error) {
+                        setState(() {
+                          loading = false;
+                        });
+                        Utils().toastmsg(error.toString(), context);
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: customPurple,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                    ),
+                    child: loading
+                        ? const SizedBox(
+                      width: 26,
+                      height: 26,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
+                    )
+                        : const Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontSize: 18,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: customPurple,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                ),
-                child: loading
-                    ? const SizedBox(
-                  width: 26,
-                  height: 26,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
-                    color: Colors.white,
                   ),
-                )
-                    : const Text(
-                  'Continue',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
+                  const SizedBox(
+                    height: 20,
+                  )
+                ],
               ),
-              const SizedBox(
-                height: 20,
-              )
-            ],
+            ),
           ),
         ),
+          if (loading) const loadingcontainer(),
+        ]
       ),
     );
   }
