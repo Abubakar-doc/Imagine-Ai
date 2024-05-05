@@ -156,32 +156,26 @@ class _SigninScreenWith_PhoneNumberState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          "Don't have an account? ",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black, // Adjust color as needed
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey.shade200,
+                            thickness: 2,
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Utils().pushReplaceSlideTransition(context, const SignupScreenWith_email_password());
-                          },
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            text: const TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: "Sign up",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(
-                                        0xFF5C3DF6), // Adjust color as needed
-                                  ),
-                                ),
-                              ],
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            "or continue with",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black, // Adjust color as needed
                             ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey.shade200,
+                            thickness: 2,
                           ),
                         ),
                       ],

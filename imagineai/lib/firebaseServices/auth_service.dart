@@ -195,6 +195,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../Ui/app_screens/crud.dart';
+import '../Ui/app_screens/profile/personal_info.dart';
 import '../Ui/auth_screens/signup/phoneNumberSignup_codeVerify.dart';
 import '../utils/utils.dart';
 
@@ -211,7 +212,7 @@ class AuthService {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => crud(),
+          builder: (context) => const personalInfo(),
         ),
             (route) => false,
       );
@@ -230,7 +231,7 @@ class AuthService {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => crud(),
+          builder: (context) => const personalInfo(),
         ),
             (route) => false,
       );
@@ -283,7 +284,7 @@ class AuthService {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => crud(),
+          builder: (context) => const personalInfo(),
         ),
             (route) => false,
       );
@@ -314,7 +315,7 @@ class AuthService {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => crud(),
+              builder: (context) => const personalInfo(),
             ),
                 (route) => false,
           );
@@ -331,4 +332,20 @@ class AuthService {
     Utils().toastmsg('Under maintenance Kindly use another method to sign in', context);
   }
 
+  static Future<void> passwordResetEmail(BuildContext context, String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      Utils().greytoastmsg(
+        "Password reset email sent to ${email.toString().trim()} successfully, check inbox or spam!",
+        context,
+      );
+      Navigator.pop(context);
+    } catch (error) {
+      Utils().toastmsg(error.toString(), context);
+      return;
+    }
+  }
+
 }
+
+

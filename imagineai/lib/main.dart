@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       'assets/Imagine Ai logo.png',
       'assets/Imagine Ai logo 2.png',
       'assets/Imagine Ai transparent logo.png',
+      'assets/Imagine Ai purple transparent logo.png',
       'assets/material/Introscreens/intro1.png',
       'assets/material/Introscreens/intro2.png',
       'assets/material/Introscreens/intro3.png',

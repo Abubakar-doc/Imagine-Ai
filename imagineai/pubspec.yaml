@@ -70,12 +70,18 @@ flutter:
     - assets/Imagine Ai logo.png
     - assets/Imagine Ai logo 2.png
     - assets/Imagine Ai transparent logo.png
+    - assets/Imagine Ai purple transparent logo.png
     - assets/material/Introscreens/intro1.png
     - assets/material/Introscreens/intro2.png
     - assets/material/Introscreens/intro3.png
     - assets/Imagine Ai logo round.png
     - assets/material/thirdPartyIcons/googleIcon.png
     - assets/material/thirdPartyIcons/facebookIcon.png
+    - assets/material/cards place holders/cyberpunk.jpeg
+    - assets/material/cards place holders/colorful.jpeg
+    - assets/material/cards place holders/robot.jpeg
+    - assets/material/cards place holders/realistic.jpeg
+    - assets/material/cards place holders/artistic.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

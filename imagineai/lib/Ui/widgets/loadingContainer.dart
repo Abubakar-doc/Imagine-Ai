@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../themeStyle.dart';
@@ -21,8 +22,8 @@ class loadingcontainer extends StatelessWidget {
                 filter: ImageFilter.blur(
                     sigmaX: 3, sigmaY: 3), // Adjust the blur intensity
                 child: Container(
-                  color: Colors.black.withOpacity(
-                      0.5), // Set the transparency to black
+                  color: Colors.black
+                      .withOpacity(0.5), // Set the transparency to black
                 ),
               ),
             ),
@@ -70,9 +71,13 @@ class loadingcontainer extends StatelessWidget {
                       SizedBox(
                         height: 30,
                       ),
-                      SpinKitThreeBounce(
-                        color: customPurple,
-                        size: 50.0,
+                      SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: SpinKitThreeBounce(
+                          color: customPurple,
+                          size: 20.0,
+                        ),
                       ),
                     ],
                   ),

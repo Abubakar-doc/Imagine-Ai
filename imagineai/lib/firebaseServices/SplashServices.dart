@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../Ui/app_screens/crud.dart';
+import 'package:imagineai/Ui/app_screens/home.dart';
 import '../Ui/app_screens/intro.dart';
 
 class SplashServices{
@@ -14,7 +14,7 @@ class SplashServices{
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => crud(),
+            builder: (context) => const home(),
           ),
         );
       });
