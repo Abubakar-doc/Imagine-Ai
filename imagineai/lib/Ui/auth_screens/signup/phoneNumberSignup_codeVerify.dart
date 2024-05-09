@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:imagineai/Ui/auth_screens/signup/signupWith_email_password.dart';
 import '../../../firebaseServices/auth_service.dart';
 import '../../../utils/utils.dart';
-import '../../themeStyle.dart';
+import '../../theme/themeStyle.dart';
 import '../../widgets/loadingContainer.dart';
 
 class PhoneNumberSigninCodeVerify extends StatefulWidget {
@@ -43,244 +43,247 @@ class _PhoneNumberSigninCodeVerifyState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Verify',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+    return Theme(
+      data: lightTheme,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Verify',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          ),
         ),
-      ),
-      body: Stack(children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    'Enter OTP',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+        body: Stack(children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      'Enter OTP',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Please enter 6 digit OTP sent to you!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 17),
-                  ),
-                  const SizedBox(height: 30),
-                  Form(
-                    key: _formKey,
-                    child: Column(
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Please enter 6 digit OTP sent to you!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 17),
+                    ),
+                    const SizedBox(height: 30),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: otpController,
+                            maxLength: 6,
+                            decoration: const InputDecoration(
+                              labelText: 'OTP Code',
+                              hintText: 'Enter 6-digit OTP',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: customPurple),
+                              ),
+                              prefixIcon: Icon(Icons.lock),
+                            ),
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return 'Please enter the OTP code';
+                              }
+                              if (value!.length != 6) {
+                                return 'OTP code must be 6 digits long';
+                              }
+                              // Additional validation can be added here if needed
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: otpController,
-                          maxLength: 6,
-                          decoration: const InputDecoration(
-                            labelText: 'OTP Code',
-                            hintText: 'Enter 6-digit OTP',
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: customPurple),
-                            ),
-                            prefixIcon: Icon(Icons.lock),
-                          ),
-                          validator: (value) {
-                            if (value?.isEmpty ?? true) {
-                              return 'Please enter the OTP code';
-                            }
-                            if (value!.length != 6) {
-                              return 'OTP code must be 6 digits long';
-                            }
-                            // Additional validation can be added here if needed
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "To update your phone number, ",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black, // Adjust color as needed
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            loading = false;
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "click here",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      Color(0xFF5C3DF6), // Adjust color as needed
-                                ),
-                              ),
-                              TextSpan(
-                                text: ".", // Period to end the sentence
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black, // Adjust color as needed
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: Colors.grey.shade200,
-                          thickness: 2,
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          "or continue with",
+                        const Text(
+                          "To update your phone number, ",
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.black, // Adjust color as needed
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: Colors.grey.shade200,
-                          thickness: 2,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () async {
-                        setState(() {
-                          loading = true;
-                        });
-                        await AuthService.signinWithGoogle(context);
-                        setState(() {
-                          loading = false;
-                        });
-                      },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Image.asset(
-                          'assets/material/thirdPartyIcons/googleIcon.png', // Replace with your image path
-                          width: 35,
-                          height: 35,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      OutlinedButton(
-                        onPressed: () async{
-                          await AuthService.signinwithFacebook(context);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Image.asset(
-                          'assets/material/thirdPartyIcons/facebookIcon.png', // Replace with your image path
-                          width: 25,
-                          height: 25,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      OutlinedButton(
-                        onPressed: () {
-                          Utils().toastmsg('OTP sent but not verified', context);
-                          Utils().pushReplaceSlideTransition(context, const SignupScreenWith_email_password());
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.mail_outline,
-                          size: 25,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 70,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await otpVerification(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: customPurple, // Button background color
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                    ),
-                    child: loading
-                        ? const SizedBox(
-                            width: 26,
-                            height: 26,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 3,
-                              color: Colors.white,
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              loading = false;
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: const TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "click here",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Color(0xFF5C3DF6), // Adjust color as needed
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ".", // Period to end the sentence
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black, // Adjust color as needed
+                                  ),
+                                ),
+                              ],
                             ),
-                          )
-                        : const Text(
-                            'Verify',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey.shade200,
+                            thickness: 2,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            "or continue with",
                             style: TextStyle(
                               fontSize: 18,
+                              color: Colors.black, // Adjust color as needed
                             ),
                           ),
-                  ),
-                ],
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey.shade200,
+                            thickness: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () async {
+                          setState(() {
+                            loading = true;
+                          });
+                          await AuthService.signinWithGoogle(context);
+                          setState(() {
+                            loading = false;
+                          });
+                        },
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Image.asset(
+                            'assets/material/thirdPartyIcons/googleIcon.png', // Replace with your image path
+                            width: 35,
+                            height: 35,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        OutlinedButton(
+                          onPressed: () async{
+                            await AuthService.signinwithFacebook(context);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Image.asset(
+                            'assets/material/thirdPartyIcons/facebookIcon.png', // Replace with your image path
+                            width: 25,
+                            height: 25,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        OutlinedButton(
+                          onPressed: () {
+                            Utils().toastmsg('OTP sent but not verified', context);
+                            Utils().pushReplaceSlideTransition(context, const SignupScreenWith_email_password());
+                          },
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.mail_outline,
+                            size: 25,
+                            color: Colors.grey.shade800,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 70,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await otpVerification(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: customPurple, // Button background color
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      child: loading
+                          ? const SizedBox(
+                              width: 26,
+                              height: 26,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              'Verify',
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        if (loading)
-          const loadingcontainer(),
-      ]),
+          if (loading)
+            const loadingcontainer(),
+        ]),
+      ),
     );
   }
 }

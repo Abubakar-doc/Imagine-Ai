@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../themeStyle.dart';
+import '../theme/themeStyle.dart';
 
 class indexForPages extends StatelessWidget {
   const indexForPages({

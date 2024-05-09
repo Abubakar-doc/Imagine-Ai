@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:imagineai/firebaseServices/auth_service.dart';
 import 'package:imagineai/utils/utils.dart';
-import '../../themeStyle.dart';
+import '../../theme/themeStyle.dart';
 import '../../widgets/loadingContainer.dart';
 
 class emailTo_reset_password extends StatefulWidget {
