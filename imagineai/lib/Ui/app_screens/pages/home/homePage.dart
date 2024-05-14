@@ -1,9 +1,12 @@
 import 'package:badword_guard/badword_guard.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:imagineai/Ui/app_screens/crud.dart';
 import 'package:imagineai/Ui/app_screens/imageGeneration.dart';
 import 'package:imagineai/Ui/theme/themeStyle.dart';
 import 'package:imagineai/Ui/widgets/home_ImagePlaceHolder.dart';
+import 'package:imagineai/Ui/widgets/numberPicker.dart';
 import 'package:imagineai/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,8 +41,8 @@ class _HomePageState extends State<HomePage> {
     },
   ];
   late ScrollController _scrollController;
-  int _selectedIndex = 0;
   List<String> selectedBackTexts = [];
+  late int variations = 4;
 
   @override
   void initState() {
@@ -53,12 +56,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -67,7 +64,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -99,15 +96,40 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Enter Prompt',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 27,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Enter Prompt',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+
+                  },
+                  child: const Row(
+                    children: [
+                      Text(
+                        'Explore Prompts',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: customPurple,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(Icons.keyboard_arrow_right,
+                      color: customPurple,)
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Form(
               key: _formKey,
               child: SizedBox(
@@ -119,34 +141,77 @@ class _HomePageState extends State<HomePage> {
                         : customDarkTextContainer,
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: TextFormField(
-                    controller: promptController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a prompt';
-                      }
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: TextFormField(
+                          controller: promptController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a prompt';
+                            }
 
-                      // Perform the bad word check synchronously
-                      final LanguageChecker checker = LanguageChecker();
-                      bool containsBadWord = checker.containsBadLanguage(value);
+                            final LanguageChecker checker = LanguageChecker();
+                            bool containsBadWord = checker.containsBadLanguage(value);
 
-                      if (containsBadWord) {
-                        return 'Please refrain from using inappropriate language';
-                      }
-                      return null;
-                    },
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Type anything...',
-                      contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                    ),
+                            if (containsBadWord) {
+                              return 'Please refrain from using inappropriate prompts!!!';
+                            }
+                            return null;
+                          },
+                          maxLines: null,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Type anything...',
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        right: 8,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? Colors.grey[300]
+                                : Colors.grey[800],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                                onTap: (){
+                                  promptController.clear();
+                                },
+                                child: const Text('Clear text',style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),)),
+                          )
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            CustomNumberPicker(
+              value: variations, // initial value
+              minValue: 1,
+              maxValue: 10,
+              step: 1,
+              itemHeight: 60,
+              axis: Axis.horizontal,
+              onChanged: (value) {
+                variations = value;
+              },
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.black26),
+              ),
+            ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -156,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                       'Image Style',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 27,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -189,20 +254,23 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             SizedBox(
-              height: 220,
+              height: 170,
               child: ListView.builder(
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 itemCount: imagePlaceholderData.length,
                 itemBuilder: (context, index) {
                   final data = imagePlaceholderData[index];
+                  final isSelected =
+                      selectedBackTexts.contains(data['backText']);
                   return Padding(
                     padding: const EdgeInsets.only(right: 20),
-                    child: ImagePlaceholder(
+                    child: ImagePlaceholderItem(
                       assetPath: data['assetPath'],
                       backText: data['backText'],
+                      initialSelectedState: isSelected,
                       onBackTextChanged: (String backtext, bool isSelected) {
                         setState(() {
                           if (isSelected) {
@@ -225,19 +293,27 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
+                onPressed: () async {
+                  setState(() {
+                    loading = true;
+                  });
+                  if (await _formKey.currentState!.validate()) {
                     String promptText = promptController.text.trim();
                     String generatedText = promptText.isNotEmpty
                         ? "$promptText ${selectedBackTexts.join(" ")}"
                         : selectedBackTexts.join(" ");
-                    // print("Generated text: $generatedText");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ImageGeneration(generatedText),
-                      ),
-                    );
+                    Utils().pushSlideTransition(context, ImageGeneration(
+                      generatedText,
+                      variations: variations,
+                    ),);
+                    setState(() {
+                      loading = false;
+                    });
+                  }
+                  else{
+                    setState(() {
+                      loading = false;
+                    });
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -247,19 +323,19 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: loading
                     ? const SizedBox(
-                  width: 26,
-                  height: 26,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
-                    color: Colors.white,
-                  ),
-                )
+                        width: 26,
+                        height: 26,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          color: Colors.white,
+                        ),
+                      )
                     : const Text(
-                  'Generate',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
+                        'Generate',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
               ),
             )
           ],
