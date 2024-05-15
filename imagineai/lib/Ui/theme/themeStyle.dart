@@ -4,6 +4,7 @@ const Color customPurple = Color(0xFF5C3DF6);
 const Color customDarkGreybg = Color(0xFF181A20);
 const Color customWhitebg = Color(0xFFFFFFFF);
 const Color customDarkTextContainer = Color(0xFF1F222A);
+const Color customDarkContainerOutline = Color(0xFF414454);
 Color customLightTextContainer = Colors.grey.shade200;
 
 const Color customDarkTextColor = Color(0xFFFFFFFF); // Text color for dark theme

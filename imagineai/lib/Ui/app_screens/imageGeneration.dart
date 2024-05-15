@@ -1,582 +1,386 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_spinkit/flutter_spinkit.dart';
-// import 'package:imagineai/Ui/theme/themeStyle.dart';
-// import 'dart:typed_data';
-// import '../../firebaseServices/image_sevice.dart';
-//
-// class ImageGeneration extends StatefulWidget {
-//   final String generatedText;
-//
-//   const ImageGeneration(this.generatedText, {super.key});
-//
-//   @override
-//   State<ImageGeneration> createState() => _ImageGenerationState();
-// }
-//
-// class _ImageGenerationState extends State<ImageGeneration> {
-//   bool loading = false;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(
-//               'Edit Generation',
-//               style: TextStyle(
-//                 fontSize: 22,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//             Text(
-//               'Finalize',
-//               style: TextStyle(
-//                 fontSize: 20,
-//                 fontWeight: FontWeight.bold,
-//                 color: customPurple,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(20.0),
-//         child: SingleChildScrollView(
-//           child: Column(
-//             children: [
-//               Container(
-//                 height: 350,
-//                 decoration: BoxDecoration(
-//                   color: Theme.of(context).brightness == Brightness.light
-//                       ? customLightTextContainer
-//                       : customDarkTextContainer,
-//                   borderRadius: BorderRadius.circular(20.0),
-//                 ),
-//                 child: Center(
-//                   child: FutureBuilder<Uint8List?>(
-//                     future: ModelQueryService()
-//                         .queryModel({'inputs': widget.generatedText}),
-//                     builder: (context, snapshot) {
-//                       if (snapshot.connectionState == ConnectionState.waiting) {
-//                         return const Column(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             SpinKitThreeBounce(
-//                               color: customPurple,
-//                               size: 30.0,
-//                             ),
-//                             SizedBox(
-//                               height: 10,
-//                             ),
-//                             Text(
-//                               'Generating...',
-//                               textAlign: TextAlign.center,
-//                               style: TextStyle(
-//                                 fontSize: 22,
-//                                 fontWeight: FontWeight.bold,
-//                               ),
-//                             ),
-//                           ],
-//                         );
-//                       } else if (snapshot.hasError) {
-//                         return Padding(
-//                           padding: const EdgeInsets.all(20.0),
-//                           child: Text(
-//                             'Oops ${snapshot.error} \u{1F625}',
-//                             textAlign: TextAlign.center,
-//                             style: const TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                         );
-//                       } else if (snapshot.hasData) {
-//                         return ClipRRect(
-//                           borderRadius: BorderRadius.circular(20.0),
-//                           child: Image.memory(snapshot.data!),
-//                         );
-//                       } else {
-//                         return const Padding(
-//                           padding: EdgeInsets.all(20.0),
-//                           child: Text(
-//                             'Oops something went wrong \u{1F625}',
-//                             textAlign: TextAlign.center,
-//                             style: TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                         );
-//                       }
-//                     },
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(
-//                 height: 20,
-//               ),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.end,
-//                 children: [
-//                   SizedBox(
-//                     height: 50,
-//                     child: ElevatedButton(
-//                       onPressed: () {
-//                         // Add your undo logic here for the first button
-//                       },
-//                       style: ElevatedButton.styleFrom(
-//                         foregroundColor: customPurple,
-//                         shape: RoundedRectangleBorder(
-//                           borderRadius: BorderRadius.circular(8.0),
-//                           side: const BorderSide(
-//                               color: customPurple,
-//                               width: 2), // Increased border size
-//                         ),
-//                       ),
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           Icon(Icons.undo,
-//                               color: Theme.of(context).brightness == Brightness.light
-//                                   ? customPurple
-//                                   : customWhitebg,
-//                               size: 24), // Increased icon size
-//                           const SizedBox(width: 5), // Adjust spacing as needed
-//                           Text('Undo',
-//                               style: TextStyle(
-//                                   color: Theme.of(context).brightness == Brightness.light
-//                                       ? customPurple
-//                                       : customWhitebg,
-//                                   fontSize: 20)), // Increased text size
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                   const SizedBox(
-//                       width: 10), // Adjust spacing between buttons as needed
-//                   SizedBox(
-//                     height: 50,
-//                     child: ElevatedButton(
-//                       onPressed: () {
-//                         // Add your redo logic here for the second button
-//                       },
-//                       style: ElevatedButton.styleFrom(
-//                         foregroundColor: customPurple,
-//                         shape: RoundedRectangleBorder(
-//                           borderRadius: BorderRadius.circular(8.0),
-//                           side: const BorderSide(
-//                               color: customPurple,
-//                               width: 2), // Increased border size
-//                         ),
-//                       ),
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           Text('Redo',
-//                               style: TextStyle(
-//                                   color: Theme.of(context).brightness ==
-//                                           Brightness.light
-//                                       ? customPurple
-//                                       : customWhitebg,
-//                                   fontSize: 20)), // Increased text size
-//                           const SizedBox(width: 5), // Adjust spacing as needed
-//                           Icon(Icons.redo,
-//                               color: Theme.of(context).brightness ==
-//                                       Brightness.light
-//                                   ? customPurple
-//                                   : customWhitebg,
-//                               size: 24), // Increased icon size
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//               const SizedBox(
-//                 height: 80,
-//               ),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                 children: [
-//                   Expanded(
-//                     flex: 1,
-//                     child: Container(
-//                       height: 120,
-//                       decoration: BoxDecoration(
-//                         color: Theme.of(context).brightness == Brightness.light
-//                             ? customLightTextContainer
-//                             : customDarkTextContainer,
-//                         borderRadius: BorderRadius.circular(8.0),
-//                       ),
-//                       child: Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           Icon(Icons.refresh,
-//                               color: Theme.of(context).brightness == Brightness.light
-//                                   ? customPurple
-//                                   : customWhitebg,
-//                               size: 30), // Adjust icon size
-//                           const SizedBox(height: 10), // Adjust spacing as needed
-//                           Text('Re-Generate',
-//                               style: TextStyle(
-//                                   color: Theme.of(context).brightness == Brightness.light
-//                                       ? customPurple
-//                                       : customWhitebg,
-//                                   fontSize: 18)), // Adjust text size
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                   const SizedBox(width: 20),
-//                   Expanded(
-//                     flex: 1,
-//                     child: Container(
-//                       height: 120,
-//                       decoration: BoxDecoration(
-//                         color: Theme.of(context).brightness == Brightness.light
-//                             ? customLightTextContainer
-//                             : customDarkTextContainer,
-//                         borderRadius: BorderRadius.circular(8.0),
-//                       ),
-//                       child: Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           Icon(Icons.edit,
-//                               color: Theme.of(context).brightness == Brightness.light
-//                                   ? customPurple
-//                                   : customWhitebg,
-//                               size: 30), // Adjust icon size
-//                           const SizedBox(height: 10), // Adjust spacing as needed
-//                           Text('Edit input',
-//                               style: TextStyle(
-//                                   color: Theme.of(context).brightness == Brightness.light
-//                                       ? customPurple
-//                                       : customWhitebg,
-//                                   fontSize: 18)), // Adjust text size
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               )
-//
-//
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:imagineai/Ui/theme/themeStyle.dart';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:imagineai/Ui/app_screens/finalize.dart';
+import 'package:imagineai/Ui/theme/themeStyle.dart';
+import 'package:imagineai/Ui/widgets/imageContainerGenerationScreen.dart';
+import 'package:imagineai/utils/utils.dart';
 import '../../firebaseServices/image_sevice.dart';
 
 class ImageGeneration extends StatefulWidget {
   final String generatedText;
+  final int variations;
 
-  const ImageGeneration(this.generatedText, {Key? key}) : super(key: key);
+  const ImageGeneration(
+    this.generatedText, {
+    Key? key,
+    required this.variations,
+  }) : super(key: key);
 
   @override
   State<ImageGeneration> createState() => _ImageGenerationState();
 }
 
 class _ImageGenerationState extends State<ImageGeneration> {
-  bool loading = false;
-  Uint8List? generatedImage;
+  late ScrollController _scrollController;
+  late double imageWidth; // Width of each image
+  List<Uint8List?> cachedImages = [];
+  List<bool> selectedImages = [];
+  bool _isGenerating = false;
 
-  Future<Uint8List?> _queryModelForImage(String inputText) async {
-    // Query the model with the input text
-    return ModelQueryService().queryModel({'inputs': inputText});
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    imageWidth = 350;
+    selectedImages = List.generate(widget.variations, (index) => false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'Edit Generation',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              'Finalize',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: customPurple,
+            TextButton(
+              onPressed: selectedImages.contains(true) &&
+                      !selectedImages.any((imageSelected) =>
+                          imageSelected &&
+                          cachedImages[selectedImages.indexOf(imageSelected)] ==
+                              null)
+                  ? () => _finalize()
+                  : null,
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    return selectedImages.contains(true) &&
+                            !selectedImages.any((imageSelected) =>
+                                imageSelected &&
+                                cachedImages[selectedImages
+                                        .indexOf(imageSelected)] ==
+                                    null)
+                        ? customPurple
+                        : Colors.grey;
+                  },
+                ),
               ),
-            ),
+              child: const Text(
+                'Finalize',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(13.0),
           child: Column(
             children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: _scrollController,
+                child: Row(
+                  children: List.generate(widget.variations, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        if (cachedImages[index] != null) {
+                          setState(() {
+                            _toggleImageSelection(index);
+                          });
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          FutureBuilder<Uint8List?>(
+                            future: _getCachedImage(index),
+                            builder: (context, snapshot) {
+                              bool isLoading = snapshot.connectionState ==
+                                  ConnectionState.waiting;
+                              if (isLoading) {
+                                // Disable image selection while images are being generated
+                                return ImageContainer(null, isLoading);
+                              } else if (snapshot.hasError ||
+                                  snapshot.data == null) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.43,
+                                    width: MediaQuery.of(context).size.height *
+                                        0.43,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.light
+                                          ? Colors.grey[200]
+                                          : Colors.grey[800],
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Center(
+                                        child: Text(
+                                          snapshot.hasError
+                                              ? 'Error generating image: ${snapshot.error}'
+                                              : 'Oops something went wrong \u{1F625}',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return ImageContainer(snapshot.data, isLoading);
+                              }
+                            },
+                          ),
+                          selectedImages[index]
+                              ? Positioned(
+                                  top: 10,
+                                  right: 15,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.4),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Selected',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.check_circle_rounded,
+                                            color: Colors.white,
+                                            size: 34,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(), // Empty SizedBox if not selected
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               Container(
-                height: 350,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey.shade300
+                        : customDarkContainerOutline,
+                    width: 2, // Adjust the width as needed
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(10), // Adjust the radius as needed
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Scroll Images',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _scrollController.animateTo(
+                                _scrollController.offset - imageWidth,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.ease,
+                              );
+                            },
+                            icon: const Icon(Icons.arrow_back_sharp,
+                                color:
+                                    customPurple, // Assuming customPurple is not defined
+                                size: 34),
+                          ),
+                          const SizedBox(width: 20),
+                          IconButton(
+                            onPressed: () {
+                              _scrollController.animateTo(
+                                _scrollController.offset + imageWidth,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.ease,
+                              );
+                            },
+                            icon: const Icon(Icons.arrow_forward_sharp,
+                                color:
+                                    customPurple, // Assuming customPurple is not defined
+                                size: 34),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey.shade300
+                        : customDarkContainerOutline,
+                    width: 2,
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(10), // Adjust the radius as needed
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Select all images',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 28.0),
+                        child: Transform.scale(
+                          scale: 1.2,
+                          child: Switch(
+                            value: selectedImages
+                                .every((isSelected) => isSelected),
+                            onChanged: _isGenerating
+                                ? null
+                                : (newValue) {
+                                    setState(() {
+                                      selectedImages = List.generate(
+                                        widget.variations,
+                                        (_) => newValue ?? false,
+                                      );
+                                    });
+                                  },
+                            activeColor: customPurple,
+                            inactiveTrackColor: Colors.transparent,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 60,
+              ),
+              Container(
+                width: double.infinity,
+                height: 80,
                 decoration: BoxDecoration(
                   color: Theme.of(context).brightness == Brightness.light
-                      ? customLightTextContainer
+                      ? Colors.grey.shade300
                       : customDarkTextContainer,
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius:
+                      BorderRadius.circular(10), // Customize border radius
                 ),
-                child: Center(
-                  child: FutureBuilder<Uint8List?>(
-                    future: _queryModelForImage(widget.generatedText),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SpinKitThreeBounce(
-                              color: customPurple,
-                              size: 30.0,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Generating...',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        );
-                      } else if (snapshot.hasError) {
-                        return Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
-                            'Oops ${snapshot.error} \u{1F625}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        );
-                      } else if (snapshot.hasData) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Image.memory(snapshot.data!),
-                        );
-                      } else {
-                        return const Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Text(
-                            'Oops something went wrong \u{1F625}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        );
-                      }
-                    },
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.edit,
+                        size: 25,
+                        color: customPurple,
+                      ),
+                      Text(
+                        'Change prompt',
+                        style: TextStyle(fontSize: 22, color: customPurple),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add your undo logic here for the first button
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: customPurple,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          side: const BorderSide(
-                              color: customPurple,
-                              width: 2), // Increased border size
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.undo,
-                              color: Theme.of(context).brightness == Brightness.light
-                                  ? customPurple
-                                  : customWhitebg,
-                              size: 24), // Increased icon size
-                          const SizedBox(width: 5), // Adjust spacing as needed
-                          Text('Undo',
-                              style: TextStyle(
-                                  color: Theme.of(context).brightness == Brightness.light
-                                      ? customPurple
-                                      : customWhitebg,
-                                  fontSize: 20)), // Increased text size
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                      width: 10), // Adjust spacing between buttons as needed
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add your redo logic here for the second button
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: customPurple,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          side: const BorderSide(
-                              color: customPurple,
-                              width: 2), // Increased border size
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Redo',
-                              style: TextStyle(
-                                  color: Theme.of(context).brightness ==
-                                      Brightness.light
-                                      ? customPurple
-                                      : customWhitebg,
-                                  fontSize: 20)), // Increased text size
-                          const SizedBox(width: 5), // Adjust spacing as needed
-                          Icon(Icons.redo,
-                              color: Theme.of(context).brightness ==
-                                  Brightness.light
-                                  ? customPurple
-                                  : customWhitebg,
-                              size: 24), // Increased icon size
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              // Container to display the regenerated image
-              generatedImage != null
-                  ? ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: Image.memory(generatedImage!),
-              )
-                  : Container(),
-              const SizedBox(
-                height: 80,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () {
-                        // Clear the generatedImage variable
-                        setState(() {
-                          loading = true; // Set loading to true to show the loading spinner
-                        });
-                        // Query the model again with the current input text
-                        ModelQueryService()
-                            .queryModel({'inputs': widget.generatedText + 'regenerate'})
-                            .then((imageData) {
-                          setState(() {
-                            loading = false;
-                            generatedImage = imageData;
-                          });
-                        })
-                            .catchError((error) {
-                          setState(() {
-                            loading = false; // Set loading to false if an error occurs
-                          });
-                          // Handle error
-                          print('Error generating image: $error');
-                        });
-                      },
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.light
-                              ? customLightTextContainer
-                              : customDarkTextContainer,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.refresh,
-                                color: Theme.of(context).brightness == Brightness.light
-                                    ? customPurple
-                                    : customWhitebg,
-                                size: 30), // Adjust icon size
-                            const SizedBox(height: 10), // Adjust spacing as needed
-                            Text('Re-Generate',
-                                style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.light
-                                        ? customPurple
-                                        : customWhitebg,
-                                    fontSize: 18)), // Adjust text size
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? customLightTextContainer
-                            : customDarkTextContainer,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.edit,
-                              color: Theme.of(context).brightness == Brightness.light
-                                  ? customPurple
-                                  : customWhitebg,
-                              size: 30), // Adjust icon size
-                          const SizedBox(height: 10), // Adjust spacing as needed
-                          Text('Edit input',
-                              style: TextStyle(
-                                  color: Theme.of(context).brightness == Brightness.light
-                                      ? customPurple
-                                      : customWhitebg,
-                                  fontSize: 18)), // Adjust text size
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
         ),
       ),
     );
   }
+
+  Future<Uint8List?> _getCachedImage(int index) async {
+    if (cachedImages.length <= index) {
+      _isGenerating = true;
+      Uint8List? imageData = await ModelQueryService()
+          .queryModel({'inputs': widget.generatedText});
+      cachedImages.add(imageData);
+      _isGenerating = false;
+      if (cachedImages.length == widget.variations && !_isGenerating) {
+        // All images are generated, update the UI
+        setState(() {});
+      }
+      return imageData;
+    } else {
+      return cachedImages[index];
+    }
+  }
+
+  void _finalize() async {
+    List<Uint8List?> selectedImageData = [];
+    for (int i = 0; i < selectedImages.length; i++) {
+      if (selectedImages[i]) {
+        selectedImageData.add(cachedImages[i]);
+      }
+    }
+
+    if (selectedImageData.isEmpty) {
+      Utils().greytoastmsg('Please select a image first!!!', context);
+      return;
+    }
+
+    Utils().pushSlideTransition(context,
+        Finalize(widget.generatedText, selectedImageData: selectedImageData));
+  }
+
+  void _toggleImageSelection(int index) {
+    setState(() {
+      selectedImages[index] = !selectedImages[index];
+    });
+  }
+
 }
