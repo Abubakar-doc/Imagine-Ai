@@ -253,7 +253,6 @@
 //   }
 // }
 
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:imagineai/Ui/auth_screens/signin/signinWith_email_password.dart';
@@ -338,29 +337,30 @@ class _signinParentScreenState extends State<signinParentScreen> {
                               ),
                               child: Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 12),
+                                    const EdgeInsets.symmetric(horizontal: 12),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     loading
                                         ? const SizedBox(
-                                      width: 26, // Set the desired width
-                                      height: 26, // Set the desired height
-                                      child: CircularProgressIndicator(
-                                        strokeWidth:
-                                        3, // Adjust the thickness if needed
-                                        color: Colors
-                                            .black, // Set color to white
-                                      ),
-                                    )
+                                            width: 26, // Set the desired width
+                                            height:
+                                                26, // Set the desired height
+                                            child: CircularProgressIndicator(
+                                              strokeWidth:
+                                                  3, // Adjust the thickness if needed
+                                              color: Colors
+                                                  .black, // Set color to white
+                                            ),
+                                          )
                                         : SizedBox(
-                                      width: 40,
-                                      height: 40,
-                                      child: Image.asset(
-                                        'assets/material/thirdPartyIcons/googleIcon.png',
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
+                                            width: 40,
+                                            height: 40,
+                                            child: Image.asset(
+                                              'assets/material/thirdPartyIcons/googleIcon.png',
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
                                     const SizedBox(width: 8),
                                     const Text(
                                       'Continue with Google',
@@ -390,8 +390,8 @@ class _signinParentScreenState extends State<signinParentScreen> {
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -420,55 +420,62 @@ class _signinParentScreenState extends State<signinParentScreen> {
                           SizedBox(
                             height: 50, // Adjust the height as needed
                             child: OutlinedButton(
-                              onPressed: () {
-                                Utils().pushSlideTransition(context, const SigninScreenWith_PhoneNumber());
-                              },
-                              style: OutlinedButton.styleFrom(
-                                minimumSize: const Size(double.infinity, 50),
-                                foregroundColor: Colors.black,
-                                side: BorderSide(
-                                  color: Colors.grey.shade400,
-                                ),
-                              ),
-                              child: const SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 12),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.phone,
-                                        size: 30,
-                                        color: Colors.black,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        'Continue with Phone no',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ],
+                                onPressed: () {
+                                  Utils().pushSlideTransition(context,
+                                      const SigninScreenWith_PhoneNumber());
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  minimumSize: const Size(double.infinity, 50),
+                                  foregroundColor: Colors.black,
+                                  side: BorderSide(
+                                    color: Colors.grey.shade400,
                                   ),
                                 ),
-                              )
-                            ),
+                                child: const SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 12),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.phone,
+                                          size: 30,
+                                          color: Colors.black,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Continue with Phone no',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )),
                           ),
                           const SizedBox(height: 50),
                           SizedBox(
                             height: 50,
                             child: ElevatedButton(
                               onPressed: () {
-                                Utils().pushSlideTransition(context, const SigninScreenWith_email_password());
+                                Utils().pushSlideTransition(context,
+                                    const SigninScreenWith_email_password());
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.zero, // Remove default padding
+                                padding:
+                                    EdgeInsets.zero, // Remove default padding
                                 backgroundColor: customPurple,
-                                minimumSize: const Size(double.infinity, 50), // Make button take all available horizontal space
+                                minimumSize: const Size(double.infinity,
+                                    50), // Make button take all available horizontal space
                               ),
                               child: const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 30), // Adjust the horizontal padding as needed
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        30), // Adjust the horizontal padding as needed
                                 child: Center(
                                   child: Text(
                                     'Sign in with password',
@@ -496,7 +503,8 @@ class _signinParentScreenState extends State<signinParentScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Utils().pushSlideTransition(context, const SignupScreenWith_email_password());
+                                  Utils().pushSlideTransition(context,
+                                      const SignupScreenWith_email_password());
                                 },
                                 child: const Text(
                                   'Sign up',
@@ -516,7 +524,10 @@ class _signinParentScreenState extends State<signinParentScreen> {
                 ),
               ),
             ),
-            if (loading) const loadingcontainer(),
+            if (loading)
+              const LoadingContainer(
+                message: "We're signing you in !!!",
+              ),
           ],
         ),
       ),

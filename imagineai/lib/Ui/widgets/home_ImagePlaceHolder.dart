@@ -95,7 +95,7 @@ class ImagePlaceholder extends StatelessWidget {
               ),
             ),
             if (isSelected)
-              Positioned(
+              const Positioned(
                 top: 130 * 0.05,
                 right: 130 * 0.05,
                 child: Icon(
@@ -106,12 +106,12 @@ class ImagePlaceholder extends StatelessWidget {
               ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           backText,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isSelected ? customPurple : Theme.of(context).textTheme.bodyText1!.color,
+            color: isSelected ? customPurple : Theme.of(context).textTheme.bodyLarge!.color,
             fontWeight: FontWeight.w500,
             fontSize: 20,
           ),

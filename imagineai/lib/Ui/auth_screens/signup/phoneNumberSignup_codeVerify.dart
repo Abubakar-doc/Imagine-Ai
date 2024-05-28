@@ -281,7 +281,9 @@ class _PhoneNumberSigninCodeVerifyState
             ),
           ),
           if (loading)
-            const loadingcontainer(),
+            const LoadingContainer(
+              message: "We're signing you in !!!",
+            ),
         ]),
       ),
     );

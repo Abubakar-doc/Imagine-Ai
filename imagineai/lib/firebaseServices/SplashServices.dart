@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:imagineai/Ui/app_screens/home.dart';
-import '../Ui/app_screens/intro.dart';
+import 'package:imagineai/Ui/app_screens/home/home.dart';
+import '../Ui/app_screens/intro/intro.dart';
 
 class SplashServices{
   void isSignedIn(BuildContext context){

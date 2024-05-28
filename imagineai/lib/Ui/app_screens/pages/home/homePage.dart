@@ -2,8 +2,9 @@ import 'package:badword_guard/badword_guard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:imagineai/Ui/app_screens/Notification/notification.dart';
 import 'package:imagineai/Ui/app_screens/crud.dart';
-import 'package:imagineai/Ui/app_screens/imageGeneration.dart';
+import 'package:imagineai/Ui/app_screens/image_generation/imageGeneration.dart';
 import 'package:imagineai/Ui/theme/themeStyle.dart';
 import 'package:imagineai/Ui/widgets/home_ImagePlaceHolder.dart';
 import 'package:imagineai/Ui/widgets/numberPicker.dart';
@@ -83,7 +84,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Utils().pushSlideTransition(context, crud());
+                    Utils().pushSlideTransition(context, notification());
+                    // Utils().pushSlideTransition(context, crud());
                   },
                   child: Icon(
                     Icons.notifications_none_outlined,
@@ -197,7 +199,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 10),
             CustomNumberPicker(
-              value: variations, // initial value
+              value: variations,
               minValue: 1,
               maxValue: 10,
               step: 1,

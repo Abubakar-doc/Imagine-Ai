@@ -1,24 +1,37 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:imagineai/Ui/app_screens/intro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:imagineai/Ui/app_screens/intro/intro.dart';
+import 'package:imagineai/Ui/app_screens/profile/personal_info.dart';
 import '../../utils/utils.dart';
 
 class crud extends StatefulWidget {
-  crud({
-    super.key,
-  });
+  crud({super.key});
 
   @override
   State<crud> createState() => _crudState();
 }
 
 class _crudState extends State<crud> {
-
   final auth = FirebaseAuth.instance;
   bool loading = false;
   final databaseref = FirebaseDatabase.instance.ref('Post');
   final postController = TextEditingController();
+
+  Future<void> deleteAllUserData() async {
+    CollectionReference userDataRef = FirebaseFirestore.instance.collection('UserData');
+
+    try {
+      QuerySnapshot snapshot = await userDataRef.get();
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
+      Utils().toastmsg('All documents deleted successfully', context);
+    } catch (error) {
+      Utils().toastmsg('Error deleting documents: $error', context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,27 +41,28 @@ class _crudState extends State<crud> {
         backgroundColor: Colors.blue,
         actions: [
           IconButton(
-              onPressed: () {
-                auth.signOut().then((value) {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => IntroScreen(), // Replace HomeScreen with your actual home screen widget
-                    ),
-                        (route) => false, // Remove all routes from the stack
-                  );
-                }).onError((error, stackTrace){
-                  Utils().toastmsg(error, context);
-                });
-              },
-              icon: const Icon(Icons.logout_outlined))
+            onPressed: () {
+              auth.signOut().then((value) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => IntroScreen(),
+                  ),
+                      (route) => false,
+                );
+              }).onError((error, stackTrace) {
+                Utils().toastmsg(error.toString(), context);
+              });
+            },
+            icon: const Icon(Icons.logout_outlined),
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              width: 300, // Adjust width as needed
+              width: 300,
               margin: const EdgeInsets.all(10),
               child: TextField(
                 maxLines: 2,
@@ -63,18 +77,17 @@ class _crudState extends State<crud> {
               height: 10,
             ),
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceAround, // Changed to spaceEvenly
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Add operation
+                    Utils().pushSlideTransition(context, const PersonalInfo());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                   ),
                   child: const Text(
-                    'Add',
+                    'userdata',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -92,7 +105,14 @@ class _crudState extends State<crud> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Delete operation
+                    setState(() {
+                      loading = true;
+                    });
+                    deleteAllUserData().then((_) {
+                      setState(() {
+                        loading = false;
+                      });
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
@@ -122,4 +142,3 @@ class _crudState extends State<crud> {
     );
   }
 }
-

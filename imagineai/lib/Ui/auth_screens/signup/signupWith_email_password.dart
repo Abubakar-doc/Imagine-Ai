@@ -383,7 +383,9 @@ class _SignupScreenWith_email_passwordState
             ),
           ),
             if (loading)
-              const loadingcontainer(),]
+              const LoadingContainer(
+                message: "We're signing you in !!!",
+              ),]
         ),
       ),
     );

@@ -1,18 +1,19 @@
+import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:imagineai/Ui/app_screens/home/home.dart';
 import 'package:imagineai/Ui/theme/themeStyle.dart';
 import 'package:imagineai/Ui/widgets/imageContainerGenerationScreen.dart';
 import 'package:imagineai/firebaseServices/image_sevice.dart';
 import 'package:imagineai/utils/utils.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class Finalize extends StatefulWidget {
   final String generatedText;
   final List<Uint8List?> selectedImageData;
 
-  const Finalize(this.generatedText,
-      {super.key, required this.selectedImageData});
+  const Finalize(this.generatedText, {super.key, required this.selectedImageData});
 
   @override
   State<Finalize> createState() => _FinalizeState();
@@ -45,12 +46,15 @@ class _FinalizeState extends State<Finalize> {
               ),
             ),
             GestureDetector(
-                onTap: () {},
-                child: const Icon(
-                  Icons.share,
-                  color: customPurple,
-                  size: 25,
-                ))
+              onTap: () async {
+                await shareImages();
+              },
+              child: const Icon(
+                Icons.share,
+                color: customPurple,
+                size: 25,
+              ),
+            )
           ],
         ),
       ),
@@ -63,8 +67,7 @@ class _FinalizeState extends State<Finalize> {
                 scrollDirection: Axis.horizontal,
                 controller: _scrollController,
                 child: Row(
-                  children:
-                  List.generate(widget.selectedImageData.length, (index) {
+                  children: List.generate(widget.selectedImageData.length, (index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: ImageContainer(
@@ -86,7 +89,7 @@ class _FinalizeState extends State<Finalize> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          'Add Tittle',
+                          'Add Title',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24,
@@ -116,8 +119,7 @@ class _FinalizeState extends State<Finalize> {
                         color: Theme.of(context).brightness == Brightness.light
                             ? Colors.grey.shade300
                             : customDarkTextContainer,
-                        borderRadius: BorderRadius.circular(
-                            10), // Customize border radius
+                        borderRadius: BorderRadius.circular(10), // Customize border radius
                       ),
                       child: Form(
                         key: _formKey,
@@ -131,14 +133,12 @@ class _FinalizeState extends State<Finalize> {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter a title!!!';
                                   }
-
                                   return null;
                                 },
                                 maxLines: null,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize:
-                                  20, // You can adjust the font size as needed
+                                  fontSize: 20, // You can adjust the font size as needed
                                 ),
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
@@ -189,15 +189,16 @@ class _FinalizeState extends State<Finalize> {
                         color: Theme.of(context).brightness == Brightness.light
                             ? Colors.grey.shade300
                             : customDarkTextContainer,
-                        borderRadius: BorderRadius.circular(
-                            10), // Customize border radius
+                        borderRadius: BorderRadius.circular(10), // Customize border radius
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           widget.generatedText,
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
@@ -237,9 +238,7 @@ class _FinalizeState extends State<Finalize> {
                             height: 70,
                             child: ElevatedButton(
                               onPressed: () {
-                                Utils().greytoastmsg(
-                                    'This option will be available soon.',
-                                    context);
+                                Utils().greytoastmsg('This option will be available soon.', context);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: customPurple,
@@ -271,15 +270,38 @@ class _FinalizeState extends State<Finalize> {
 
   Future<void> downloadImage({required BuildContext context}) async {
     final List<Uint8List?> selectedImageData = widget.selectedImageData;
-
     ImageQueryService imageQueryService = ImageQueryService();
-
-    await imageQueryService.downloadImage(
-      context: context,
-      selectedImageData: selectedImageData,
-    );
-
+    await imageQueryService.downloadImage(context: context, selectedImageData: selectedImageData);
     _showDownloadConfirmationPopup(context);
+  }
+
+  Future<void> shareImages() async {
+    try {
+      final List<String> imagePaths = await _saveImagesTemporarily(widget.selectedImageData);
+      final List<XFile> xFiles = imagePaths.map((path) => XFile(path)).toList();
+      await Share.shareXFiles(xFiles, text: "Unlock your imagination with Imagine AI! Experience the magic of AI-powered creations that will leave you inspired. Try Imagine AI today.\nClick on the link below \nhttps://github.com/Abubakar-doc");
+    } catch (e) {
+      Utils().toastmsg('Error sharing images: $e', context);
+    }
+  }
+
+  Future<List<String>> _saveImagesTemporarily(List<Uint8List?> images) async {
+    final List<String> paths = [];
+    for (int i = 0; i < images.length; i++) {
+      if (images[i] != null) {
+        final String tempPath = await _saveImageToTemporaryFile(images[i]!, i);
+        paths.add(tempPath);
+      }
+    }
+    return paths;
+  }
+
+  Future<String> _saveImageToTemporaryFile(Uint8List imageData, int index) async {
+    final String tempDir = (await getTemporaryDirectory()).path;
+    final String filePath = '$tempDir/image_$index.png';
+    final File file = File(filePath);
+    await file.writeAsBytes(imageData);
+    return filePath;
   }
 
   void _showDownloadConfirmationPopup(BuildContext context) {
@@ -304,9 +326,10 @@ class _FinalizeState extends State<Finalize> {
                   'Download Successfully!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontSize: 35.0,
-                      fontWeight: FontWeight.bold,
-                      color: customPurple),
+                    fontSize: 35.0,
+                    fontWeight: FontWeight.bold,
+                    color: customPurple,
+                  ),
                 ),
                 const SizedBox(height: 20.0),
                 const Padding(
@@ -314,8 +337,10 @@ class _FinalizeState extends State<Finalize> {
                   child: Text(
                     'Your image is downloaded successfully. Now you can view it in your gallery.',
                     textAlign: TextAlign.center,
-                    style:
-                    TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20.0),
@@ -352,8 +377,7 @@ class _FinalizeState extends State<Finalize> {
                         height: 70,
                         child: ElevatedButton(
                           onPressed: () {
-                            Utils().pushReplaceSlideTransition(
-                                context, const Home());
+                            Utils().pushReplaceSlideTransition(context, const Home());
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: customPurple,

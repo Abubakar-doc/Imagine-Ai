@@ -14,7 +14,7 @@ ThemeData lightTheme = ThemeData(
   scaffoldBackgroundColor: customWhitebg,
   brightness: Brightness.light,
   textTheme: const TextTheme(
-    bodyText1: TextStyle(color: customLightTextColor),
+    bodyLarge: TextStyle(color: customLightTextColor),
   ),
   iconTheme: const IconThemeData(color: customPurple), // Icon color for light theme
 );
@@ -23,7 +23,7 @@ ThemeData darkTheme = ThemeData(
   scaffoldBackgroundColor: customDarkGreybg,
   brightness: Brightness.dark,
   textTheme: const TextTheme(
-    bodyText1: TextStyle(color: customDarkTextColor),
+    bodyLarge: TextStyle(color: customDarkTextColor),
   ),
   iconTheme: const IconThemeData(color: Colors.white), // Icon color for dark theme
 );
